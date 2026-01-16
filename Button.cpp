@@ -1,6 +1,10 @@
 #include "Button.h"
 
 Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindow* view) {
+	/*
+	Insert Specification
+	*/
+	// rectangle initialization
 	m_body.setPosition(position);
 	m_body.setSize({ width, height });
 	m_body.setFillColor(m_fillColor);
@@ -8,6 +12,7 @@ Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindo
 	m_body.setOutlineColor(m_outlineColor);
 	m_view = view;
 
+	// circle initialization
 	m_circle.setFillColor(sf::Color(114, 121, 133));
 	m_circle.setOutlineColor(sf::Color::White);
 	m_circle.setOutlineThickness(1);
@@ -16,6 +21,9 @@ Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindo
 }
 
 void Button::draw(sf::RenderWindow* view) {
+	/*
+	Insert Specification
+	*/
 	view->draw(m_body);
 	if (isHovered()) {
 		view->draw(m_circle);
@@ -25,6 +33,9 @@ void Button::draw(sf::RenderWindow* view) {
 
 // allows the user to assign colors to the button
 void Button::setColors(sf::Color color) {
+	/*
+	Insert Specification
+	*/
 	m_fillColor = color;
 
 	int red{ m_fillColor.r };
@@ -32,13 +43,20 @@ void Button::setColors(sf::Color color) {
 	int blue{ m_fillColor.b };
 
 	m_darkFillColor = sf::Color(red * .5, green * .5, blue * .5);
+	m_darkerFillColor = sf::Color(red * .25, green * .25, blue * .25);
 }
 
 
-// essentially the update member function for the colors
 void Button::initColors() {
+	/*
+	Insert Specification
+	*/
+
 	if (isHovered()) {
 		m_body.setFillColor(m_darkFillColor);
+		if (isPressed() && !m_dragging) {
+			m_body.setFillColor(m_darkerFillColor);
+		}
 	}
 	else {
 		m_body.setFillColor(m_fillColor);
@@ -46,6 +64,9 @@ void Button::initColors() {
 }
 
 void Button::handleMove() {
+	/*
+	Insert Specification
+	*/
 	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
 	sf::Vector2f rectPos{ m_body.getPosition() };
 
@@ -61,9 +82,14 @@ void Button::handleMove() {
 }
 
 bool Button::isHovered() {
+	/*
+	Insert Specification
+	*/
 	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
 
-	if (m_body.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })) {
+	if (m_body.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })
+		|| m_circle.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })
+	) {
 		return true;
 	}
 	return false;

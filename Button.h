@@ -27,6 +27,7 @@ private:
 	sf::CircleShape m_circle{5};
 	sf::Color m_fillColor{};
 	sf::Color m_darkFillColor{};
+	sf::Color m_darkerFillColor{};
 	sf::Color m_outlineColor{ sf::Color::White };
 	float m_outlineThickness{1};
 	sf::RenderWindow* m_view{};
