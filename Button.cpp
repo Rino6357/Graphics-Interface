@@ -7,10 +7,19 @@ Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindo
 	m_body.setOutlineThickness(m_outlineThickness);
 	m_body.setOutlineColor(m_outlineColor);
 	m_view = view;
+
+	m_circle.setFillColor(sf::Color(114, 121, 133));
+	m_circle.setOutlineColor(sf::Color::White);
+	m_circle.setOutlineThickness(1);
+	m_circle.setOrigin(m_circle.getGeometricCenter());
+	m_circle.setPosition(m_body.getPosition());
 }
 
-void Button::draw(sf::RenderWindow* view) const {
+void Button::draw(sf::RenderWindow* view) {
 	view->draw(m_body);
+	if (isHovered()) {
+		view->draw(m_circle);
+	}
 
 }
 
@@ -36,8 +45,23 @@ void Button::initColors() {
 	}
 }
 
+void Button::handleMove() {
+	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
+	sf::Vector2f rectPos{ m_body.getPosition() };
+
+	if (m_circle.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) }) && isPressed()) {
+		m_dragging = true;
+	}
+
+	if (m_dragging) {
+		m_body.setPosition({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) });
+		m_circle.setPosition({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) });
+	}
+	
+}
+
 bool Button::isHovered() {
-	sf::Vector2i mouse{ sf::Mouse::getPosition(*m_view) };
+	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
 
 	if (m_body.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })) {
 		return true;
@@ -48,11 +72,16 @@ bool Button::isHovered() {
 bool Button::isPressed() {
 	bool pressed{ sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) };
 
-	if (this->isHovered() && pressed) {
+	if (pressed) {
 		return true;
 	}
 }
 
 void Button::update() {
 	initColors();
+	handleMove();
+
+	if (!isPressed() && m_dragging) {
+		m_dragging = false;
+	}
 }

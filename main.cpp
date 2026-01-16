@@ -7,11 +7,11 @@
 // skibidi
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "SFML Line");
+    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "Workspace");
 
     sf::Clock clock;
 
-    Button button{ {100,0}, 100, 100, &window};
+    Button button{ {100,100}, 100, 100, &window};
     button.setColors(sf::Color::Blue);
 
     while (window.isOpen()) {
