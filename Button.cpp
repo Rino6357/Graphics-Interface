@@ -42,12 +42,12 @@ void Button::setColors(sf::Color color) {
 	int green{ m_fillColor.g };
 	int blue{ m_fillColor.b };
 
-	m_darkFillColor = sf::Color(red * .5, green * .5, blue * .5);
-	m_darkerFillColor = sf::Color(red * .25, green * .25, blue * .25);
+	m_darkFillColor = sf::Color(red * .8, green * .8, blue * .8);
+	m_darkerFillColor = sf::Color(red * .5, green * .5, blue * .5);
 }
 
 
-void Button::initColors() {
+void Button::handleColors() {
 	/*
 	Insert Specification
 	*/
@@ -95,7 +95,7 @@ bool Button::isHovered() {
 	return false;
 }
 
-bool Button::isPressed() {
+bool Button::isPressed() { // IF THE MOUSE IS PRESSED, NOT SPECIFICALLY THE BUTTON
 	bool pressed{ sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) };
 
 	if (pressed) {
@@ -104,10 +104,23 @@ bool Button::isPressed() {
 }
 
 void Button::update() {
-	initColors();
+	handleColors();
 	handleMove();
 
 	if (!isPressed() && m_dragging) {
 		m_dragging = false;
 	}
+
+	if (isHovered() && isPressed() && !m_pressed && !m_dragging) { // handle action when button is pressed
+		m_action();
+		m_pressed = true;
+	}
+
+	if (!isPressed()) {
+		m_pressed = false;
+	}
+}
+
+void Button::setFunction(ButtonFunction action) {
+	m_action = action;
 }

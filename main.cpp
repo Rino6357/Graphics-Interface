@@ -3,6 +3,7 @@
 #include "Leg.h"
 #include "Constants.h"
 #include "Button.h"
+#include "Random.h"
 
 // skibidi
 
@@ -13,6 +14,12 @@ int main() {
 
     Button button{ {100,100}, 100, 100, &window};
     button.setColors(sf::Color::Blue);
+
+    button.setFunction(
+        [&] {
+            button.setColors(Constants::colors[Random::get(0, 11)]);
+        }
+    );
 
     while (window.isOpen()) {
         while (const auto event = window.pollEvent()) {

@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
+#include <functional>
 #include <SFML/Graphics.hpp>
+
+using ButtonFunction = std::function<void()>;
 
 class Button
 {
@@ -11,9 +14,11 @@ public:
 
 	void setColors(sf::Color color);
 
-	void initColors();
+	void handleColors();
 
 	void handleMove();
+
+	void setFunction(ButtonFunction action);
 
 	bool isHovered();
 
@@ -31,7 +36,8 @@ private:
 	sf::Color m_outlineColor{ sf::Color::White };
 	float m_outlineThickness{1};
 	sf::RenderWindow* m_view{};
+	ButtonFunction m_action{NULL};
 	bool m_dragging{ false };
-
+	bool m_pressed{ false };
 };
 
