@@ -7,3 +7,7 @@ std::array<sf::Color, 20> Constants::colors{
     sf::Color::Red, sf::Color::Cyan, sf::Color::Magenta, sf::Color(0, 255, 255), // 1, 2, 3, light blue
     sf::Color(255, 115, 239), sf::Color(115, 54, 0), sf::Color(142, 245, 132), sf::Color(255, 145, 0) // light pink, brown, pastel green, orange
 };
+
+std::array<std::string, 4> Constants::dirtSounds{
+    "sounds/Dirt1.wav", "sounds/Dirt2.wav", "sounds/Dirt3.wav", "sounds/Dirt4.wav"
+};

@@ -1,16 +1,15 @@
 #include "Button.h"
+#include "Game.h"
 
-Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindow* view) {
+Button::Button(sf::Vector2f position, float width, float height) {
 	/*
 	Insert Specification
 	*/
 	// rectangle initialization
 	m_body.setPosition(position);
 	m_body.setSize({ width, height });
-	m_body.setFillColor(m_fillColor);
 	m_body.setOutlineThickness(m_outlineThickness);
 	m_body.setOutlineColor(m_outlineColor);
-	m_view = view;
 
 	// circle initialization
 	m_circle.setFillColor(sf::Color(114, 121, 133));
@@ -18,6 +17,16 @@ Button::Button(sf::Vector2f position, float width, float height, sf::RenderWindo
 	m_circle.setOutlineThickness(1);
 	m_circle.setOrigin(m_circle.getGeometricCenter());
 	m_circle.setPosition(m_body.getPosition());
+
+	sf::FloatRect bounds{ m_body.getGlobalBounds() };
+
+	m_bufferedBounds = sf::FloatRect{
+		{bounds.position.x + m_buffer,
+		 bounds.position.y + m_buffer},
+		{bounds.size.x - (m_buffer * 2),
+		 bounds.size.y - (m_buffer * 2)}
+	};
+
 }
 
 void Button::draw(sf::RenderWindow* view) {
@@ -25,6 +34,10 @@ void Button::draw(sf::RenderWindow* view) {
 	Insert Specification
 	*/
 	view->draw(m_body);
+
+	if (m_hasTexture) {
+		view->draw(m_sprite);
+	}
 	if (isHovered()) {
 		view->draw(m_circle);
 	}
@@ -52,14 +65,34 @@ void Button::handleColors() {
 	Insert Specification
 	*/
 
+	m_body.setFillColor(m_fillColor);
+
 	if (isHovered()) {
 		m_body.setFillColor(m_darkFillColor);
+		if (m_hasTexture) {
+			m_sprite.setColor(sf::Color(204, 204, 204));  // 80% brightness, no pixel loop needed
+		}
 		if (isPressed() && !m_dragging) {
 			m_body.setFillColor(m_darkerFillColor);
+			m_sprite.setColor(sf::Color(128, 128, 128));  // 50% brightness, no pixel loop needed	
 		}
 	}
 	else {
 		m_body.setFillColor(m_fillColor);
+		if (m_hasTexture) {
+			m_sprite.setColor(sf::Color::White);  // Reset to original color
+		}
+	}
+}
+
+void Button::handleMouseClick(sf::Vector2f clickPos) {
+
+	if (m_circle.getGlobalBounds().contains(clickPos)) {
+		m_dragging = true;
+	}
+
+	if (m_bufferedBounds.contains(clickPos)) {
+		m_clickedInside = true;
 	}
 }
 
@@ -67,29 +100,32 @@ void Button::handleMove() {
 	/*
 	Insert Specification
 	*/
-	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
-	sf::Vector2f rectPos{ m_body.getPosition() };
 
-	if (m_circle.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) }) && isPressed()) {
-		m_dragging = true;
+	if (!Game::isMousePressed()) {
+		m_dragging = false;
 	}
 
 	if (m_dragging) {
-		m_body.setPosition({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) });
-		m_circle.setPosition({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) });
+		sf::Vector2f mouse{ Game::getMousePosition() };
+		m_body.setPosition(mouse);
+		m_circle.setPosition(mouse);
+		m_bufferedBounds.position = { mouse.x + m_buffer, mouse.y + m_buffer };
+		if (m_hasTexture) {
+			m_sprite.setPosition(mouse);
+		}	
 	}
 	
 }
 
-bool Button::isHovered() {
+bool Button::isHovered() { 
 	/*
 	Insert Specification
 	*/
-	sf::Vector2i mouse{ m_view->mapPixelToCoords(sf::Mouse::getPosition(*m_view)) };
 
-	if (m_body.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })
-		|| m_circle.getGlobalBounds().contains({ static_cast<float>(mouse.x), static_cast<float>(mouse.y) })
-	) {
+	sf::Vector2f mouse{ Game::getMousePosition() };
+
+	if (m_body.getGlobalBounds().contains(mouse)
+		|| m_circle.getGlobalBounds().contains(mouse)) {
 		return true;
 	}
 	return false;
@@ -98,9 +134,7 @@ bool Button::isHovered() {
 bool Button::isPressed() { // IF THE MOUSE IS PRESSED, NOT SPECIFICALLY THE BUTTON
 	bool pressed{ sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) };
 
-	if (pressed) {
-		return true;
-	}
+	return pressed;
 }
 
 void Button::update() {
@@ -111,16 +145,45 @@ void Button::update() {
 		m_dragging = false;
 	}
 
-	if (isHovered() && isPressed() && !m_pressed && !m_dragging) { // handle action when button is pressed
-		m_action();
+	if (isHovered() && isPressed() && !m_pressed && m_clickedInside) {
+		if (m_action != nullptr) {
+			m_action();
+		}
+		if (m_hasSound) {
+			m_sound.play();
+		}
 		m_pressed = true;
 	}
 
 	if (!isPressed()) {
 		m_pressed = false;
+		m_clickedInside = false;  
 	}
 }
 
 void Button::setFunction(ButtonFunction action) {
 	m_action = action;
 }
+
+void Button::setSound(const std::filesystem::path& filePath) {
+	if (m_soundBuffer.loadFromFile(filePath)) {
+		m_sound.setBuffer(m_soundBuffer);
+		m_hasSound = true;
+	}
+}
+
+void Button::setTexture(const std::filesystem::path& filePath) {
+		if (m_texture.loadFromFile(filePath)) {
+		m_sprite.setTexture(m_texture, true);
+		m_hasTexture = true;
+
+		sf::Vector2f buttonSize = m_body.getSize();
+		sf::Vector2u textureSize = m_texture.getSize();
+		m_sprite.setScale({
+			buttonSize.x / textureSize.x,
+			buttonSize.y / textureSize.y
+			});
+		m_sprite.setPosition(m_body.getPosition());
+	}
+}
+
