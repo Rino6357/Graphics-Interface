@@ -13,7 +13,7 @@ class Button
 public:
 	Button(sf::Vector2f position, float width, float height);
 
-	void draw(sf::RenderWindow* view);
+	void virtual draw(sf::RenderWindow* view);
 
 	void setColors(sf::Color color);
 
@@ -51,11 +51,18 @@ public:
 	void setInteractable(bool interactable) { m_interactable = interactable; }
 	bool isInteractable() const { return m_interactable; }
 
+	void setUntouchable(bool untouchable) { m_untouchable = untouchable; }
+	bool isUntouchable() const { return m_untouchable; }
+
 	void setSize(sf::Vector2f size);
 
 	void setCenter(sf::Vector2f center);
 
-	void move(sf::Vector2f offset);
+	sf::Vector2f getPosition() const { return m_body.getPosition(); }
+
+	sf::Vector2f getCenter() const { return m_body.getGeometricCenter(); }
+
+	void virtual move(sf::Vector2f offset);
 
 	bool isHovered();
 
@@ -63,12 +70,13 @@ public:
 
 	void update();
 
-private:
+protected:
 	sf::RectangleShape m_body{};
 	float m_buffer{ 5.0f };
 	bool m_isBackGround{ false };
 	bool m_isStationary{ false };
 	bool m_interactable{ true };
+	bool m_untouchable{ false };
 	sf::FloatRect m_bufferedBounds{};
 	sf::CircleShape m_circle{5};
 	sf::Color m_fillColor{};

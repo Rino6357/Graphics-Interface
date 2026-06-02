@@ -9,6 +9,7 @@ Game::Game()
     m_view = sf::View(sf::FloatRect({ 0,0 }, { 1280, 800 }));
     m_window.setView(m_view);
     m_window.setKeyRepeatEnabled(false);
+    toggleFullscreen();
 }
 
 sf::Vector2f Game::m_mouse{ sf::Vector2f(0, 0) };

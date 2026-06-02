@@ -74,7 +74,7 @@ void Button::handleColors() {
 	m_body.setFillColor(m_fillColor);
 
 	if (!isBackGround()) {
-		if (isHovered()) {
+		if (isHovered() && isInteractable()) {
 			m_body.setFillColor(m_darkFillColor);
 			if (m_hasTexture) {
 				m_sprite.setColor(sf::Color(204, 204, 204));  // 80% brightness, no pixel loop needed
