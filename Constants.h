@@ -8,4 +8,6 @@ namespace Constants {
 	extern std::array<sf::Color, 20> colors;
 
 	extern std::array<std::string, 4> dirtSounds;
+
+	extern std::array<std::string, 4> stoneSounds;
 }

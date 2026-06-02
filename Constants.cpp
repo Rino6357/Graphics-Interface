@@ -11,3 +11,7 @@ std::array<sf::Color, 20> Constants::colors{
 std::array<std::string, 4> Constants::dirtSounds{
     "sounds/Dirt1.wav", "sounds/Dirt2.wav", "sounds/Dirt3.wav", "sounds/Dirt4.wav"
 };
+
+std::array<std::string, 4> Constants::stoneSounds{
+    "sounds/Stone1.wav", "sounds/Stone2.wav", "sounds/Stone3.wav", "sounds/Stone4.wav"
+};

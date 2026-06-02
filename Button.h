@@ -23,11 +23,39 @@ public:
 
 	void handleMouseClick(sf::Vector2f clickPos);
 
+	void setOutlineTrans() { m_body.setOutlineColor(sf::Color::Transparent); }
+
 	void setFunction(ButtonFunction action);
 
 	void setSound(const std::filesystem::path& filePath);
 
 	void setTexture(const std::filesystem::path& filePath);
+
+	void setBackGround(bool stationary) {
+		m_isBackGround = stationary;
+		m_isStationary = stationary;
+	}
+
+	bool isBackGround() const {
+		return m_isBackGround;
+	}	
+
+	void setStationary(bool stationary) {
+		m_isStationary = stationary;
+	}
+
+	bool isStationary() const {
+		return m_isStationary;
+	}
+
+	void setInteractable(bool interactable) { m_interactable = interactable; }
+	bool isInteractable() const { return m_interactable; }
+
+	void setSize(sf::Vector2f size);
+
+	void setCenter(sf::Vector2f center);
+
+	void move(sf::Vector2f offset);
 
 	bool isHovered();
 
@@ -37,7 +65,10 @@ public:
 
 private:
 	sf::RectangleShape m_body{};
-	float m_buffer{ 10.0f };
+	float m_buffer{ 5.0f };
+	bool m_isBackGround{ false };
+	bool m_isStationary{ false };
+	bool m_interactable{ true };
 	sf::FloatRect m_bufferedBounds{};
 	sf::CircleShape m_circle{5};
 	sf::Color m_fillColor{};

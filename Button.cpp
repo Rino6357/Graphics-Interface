@@ -38,7 +38,7 @@ void Button::draw(sf::RenderWindow* view) {
 	if (m_hasTexture) {
 		view->draw(m_sprite);
 	}
-	if (isHovered()) {
+	if (isHovered() && !isBackGround() && !isStationary() && isInteractable()) {
 		view->draw(m_circle);
 	}
 
@@ -65,22 +65,30 @@ void Button::handleColors() {
 	Insert Specification
 	*/
 
+	if (m_hasTexture) {
+		m_fillColor = sf::Color::Transparent;
+		m_darkFillColor = sf::Color::Transparent;
+		m_darkerFillColor = sf::Color::Transparent;
+	}
+
 	m_body.setFillColor(m_fillColor);
 
-	if (isHovered()) {
-		m_body.setFillColor(m_darkFillColor);
-		if (m_hasTexture) {
-			m_sprite.setColor(sf::Color(204, 204, 204));  // 80% brightness, no pixel loop needed
+	if (!isBackGround()) {
+		if (isHovered()) {
+			m_body.setFillColor(m_darkFillColor);
+			if (m_hasTexture) {
+				m_sprite.setColor(sf::Color(204, 204, 204));  // 80% brightness, no pixel loop needed
+			}
+			if (isPressed() && !m_dragging) {
+				m_body.setFillColor(m_darkerFillColor);
+				m_sprite.setColor(sf::Color(128, 128, 128));  // 50% brightness, no pixel loop needed	
+			}
 		}
-		if (isPressed() && !m_dragging) {
-			m_body.setFillColor(m_darkerFillColor);
-			m_sprite.setColor(sf::Color(128, 128, 128));  // 50% brightness, no pixel loop needed	
-		}
-	}
-	else {
-		m_body.setFillColor(m_fillColor);
-		if (m_hasTexture) {
-			m_sprite.setColor(sf::Color::White);  // Reset to original color
+		else {
+			m_body.setFillColor(m_fillColor);
+			if (m_hasTexture) {
+				m_sprite.setColor(sf::Color::White);  // Reset to original color
+			}
 		}
 	}
 }
@@ -100,24 +108,52 @@ void Button::handleMove() {
 	/*
 	Insert Specification
 	*/
+	if (!isBackGround() && !isStationary()) {
+		if (!Game::isMousePressed()) {
+			m_dragging = false;
+		}
 
-	if (!Game::isMousePressed()) {
-		m_dragging = false;
+		if (m_dragging) {
+			sf::Vector2f mouse{ Game::getMousePosition() };
+			m_body.setPosition(mouse);
+			m_circle.setPosition(mouse);
+			m_bufferedBounds.position = { mouse.x + m_buffer, mouse.y + m_buffer };
+			if (m_hasTexture) {
+				m_sprite.setPosition(mouse);
+			}
+		}
 	}
-
-	if (m_dragging) {
-		sf::Vector2f mouse{ Game::getMousePosition() };
-		m_body.setPosition(mouse);
-		m_circle.setPosition(mouse);
-		m_bufferedBounds.position = { mouse.x + m_buffer, mouse.y + m_buffer };
-		if (m_hasTexture) {
-			m_sprite.setPosition(mouse);
-		}	
-	}
-	
 }
 
-bool Button::isHovered() { 
+void Button::setSize(sf::Vector2f size) {
+	m_body.setSize(size);
+	if (m_hasTexture) {
+		sf::Vector2u textureSize = m_texture.getSize();
+		m_sprite.setScale({
+			size.x / textureSize.x,
+			size.y / textureSize.y
+			});
+	}
+}
+
+void Button::setCenter(sf::Vector2f center) {
+	sf::Vector2f pos = center - (m_body.getSize() / 2.f);
+	m_body.setPosition(pos);
+	if (m_hasTexture) {
+		m_sprite.setPosition(pos);
+	}
+}
+
+void Button::move(sf::Vector2f offset) {
+	m_body.move(offset);
+	m_circle.move(offset);
+	m_bufferedBounds.position += offset;
+	if (m_hasTexture) {
+		m_sprite.move(offset);
+	}
+}
+
+bool Button::isHovered() {
 	/*
 	Insert Specification
 	*/

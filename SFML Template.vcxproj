@@ -139,6 +139,11 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="Leg.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="StartMenu.cpp" />
+    <ClCompile Include="TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -146,7 +151,12 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Game.h" />
     <ClInclude Include="Leg.h" />
     <ClInclude Include="Line.h" />
+    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="StartMenu.h" />
+    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
