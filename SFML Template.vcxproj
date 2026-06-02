@@ -141,6 +141,7 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="TextBox.cpp" />
@@ -153,6 +154,7 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Line.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MenuScene.h" />
+    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="StartMenu.h" />

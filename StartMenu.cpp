@@ -24,7 +24,7 @@ StartMenu::StartMenu(Game* game) : Scene{ game } {
     m_buttons.back()->setTexture("textures/RegularButton.png");
     m_buttons.back()->setOutlineTrans();
     m_buttons.back()->setFunction([this] {
-        m_game->pushScene(m_game->getScene(Game::SceneID::Menu));
+        m_game->pushScene(m_game->getScene(Game::SceneID::Play));
         });
     m_buttons.back()->setStationary(true);
 

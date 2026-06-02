@@ -5,11 +5,12 @@ Game::Game()
     : m_window(sf::VideoMode({ 1280, 800 }), "SFML Workspace", sf::Style::Default),
     m_mainScene(this),
     m_menuScene(this),
-    m_startMenu(this) {
+    m_startMenu(this),
+    m_playScene(this) {
     m_view = sf::View(sf::FloatRect({ 0,0 }, { 1280, 800 }));
     m_window.setView(m_view);
     m_window.setKeyRepeatEnabled(false);
-    toggleFullscreen();
+    //toggleFullscreen();
 }
 
 sf::Vector2f Game::m_mouse{ sf::Vector2f(0, 0) };
@@ -39,6 +40,7 @@ Scene* Game::getScene(SceneID id) {
     case SceneID::Main: return &m_mainScene;
     case SceneID::Menu: return &m_menuScene;
     case SceneID::Start: return &m_startMenu;
+    case SceneID::Play: return &m_playScene;
     default: return nullptr;
     }
 }

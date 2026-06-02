@@ -7,6 +7,7 @@
 #include "MainScene.h"
 #include "MenuScene.h"
 #include "StartMenu.h"
+#include "PlayScene.h"
 
 class Game
 {
@@ -28,7 +29,8 @@ public:
 	enum SceneID {
 		Main,
 		Menu,
-		Start
+		Start,
+		Play
 	};
 
 	Scene* getScene(SceneID id);
@@ -62,5 +64,6 @@ private:
 	MainScene m_mainScene;
 	MenuScene m_menuScene;
 	StartMenu m_startMenu;
+	PlayScene m_playScene;
 };
 
