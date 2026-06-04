@@ -8,6 +8,7 @@
 #include "MenuScene.h"
 #include "StartMenu.h"
 #include "PlayScene.h"
+#include "SmallGridScene.h"
 
 class Game
 {
@@ -30,7 +31,8 @@ public:
 		Main,
 		Menu,
 		Start,
-		Play
+		Play,
+		SmallGrid
 	};
 
 	Scene* getScene(SceneID id);
@@ -65,5 +67,6 @@ private:
 	MenuScene m_menuScene;
 	StartMenu m_startMenu;
 	PlayScene m_playScene;
+	SmallGridScene m_smallGridScene;
 };
 

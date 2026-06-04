@@ -31,6 +31,8 @@ public:
 
 	void setTexture(const std::filesystem::path& filePath);
 
+	void removeTexture();
+
 	void setBackGround(bool stationary) {
 		m_isBackGround = stationary;
 		m_isStationary = stationary;
@@ -53,6 +55,9 @@ public:
 
 	void setUntouchable(bool untouchable) { m_untouchable = untouchable; }
 	bool isUntouchable() const { return m_untouchable; }
+
+	void setBoxHover (bool untouchable) { m_boxHover = untouchable; }
+	bool isBoxHover () const { return m_boxHover; }
 
 	void setSize(sf::Vector2f size);
 
@@ -77,13 +82,14 @@ protected:
 	bool m_isStationary{ false };
 	bool m_interactable{ true };
 	bool m_untouchable{ false };
+	bool m_boxHover{ false };
 	sf::FloatRect m_bufferedBounds{};
 	sf::CircleShape m_circle{5};
 	sf::Color m_fillColor{};
 	sf::Color m_darkFillColor{};
 	sf::Color m_darkerFillColor{};
 	sf::Color m_outlineColor{ sf::Color::White };
-	float m_outlineThickness{1};
+	float m_outlineThickness{10};
 	sf::RenderWindow* m_view{};
 	ButtonFunction m_action{NULL};
 	bool m_dragging{ false };

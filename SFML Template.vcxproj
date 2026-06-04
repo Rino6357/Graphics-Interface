@@ -133,6 +133,7 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BigGrid.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -143,10 +144,13 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SmallGrid.cpp" />
+    <ClCompile Include="SmallGridScene.cpp" />
     <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BigGrid.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Game.h" />
@@ -157,6 +161,8 @@ sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SmallGrid.h" />
+    <ClInclude Include="SmallGridScene.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="TextBox.h" />
   </ItemGroup>

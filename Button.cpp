@@ -195,6 +195,13 @@ void Button::update() {
 		m_pressed = false;
 		m_clickedInside = false;  
 	}
+
+	if (isHovered() && isBoxHover()) {
+		m_body.setOutlineColor(sf::Color::White);
+	}
+	else {
+		setOutlineTrans();
+	}
 }
 
 void Button::setFunction(ButtonFunction action) {
@@ -221,5 +228,10 @@ void Button::setTexture(const std::filesystem::path& filePath) {
 			});
 		m_sprite.setPosition(m_body.getPosition());
 	}
+}
+
+void Button::removeTexture() {
+	sf::Texture empty;
+	m_sprite.setTexture(empty, true);
 }
 

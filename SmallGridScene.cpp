@@ -1,7 +1,8 @@
-#include "PlayScene.h"
+#include "SmallGridScene.h"
 #include "Game.h"
 
-PlayScene::PlayScene(Game* game) : Scene{ game } {
+SmallGridScene::SmallGridScene(Game* game)
+    : Scene{ game } {
     sf::Vector2f windowSize = m_game->getWindowSize();
     sf::Vector2f windowCenter = windowSize / 2.f;
 
@@ -33,7 +34,6 @@ PlayScene::PlayScene(Game* game) : Scene{ game } {
     m_buttons.back()->setInteractable(false);
     m_buttons.back()->setUntouchable(true);
     m_buttons.back()->setTexture("Textures/GridBig.png");
-    m_bigGrid.assignButton(m_buttons.back().get());
 
     int count{ 0 };
 
@@ -48,54 +48,50 @@ PlayScene::PlayScene(Game* game) : Scene{ game } {
                 sf::Vector2f{ subGridX, subGridY },
                 smallGridSize, smallGridSize
             ));
-
+            m_buttons.back()->setColors(sf::Color::Transparent);
             m_buttons.back()->setOutlineTrans();
             m_buttons.back()->setStationary(true);
             m_buttons.back()->setInteractable(true);
             m_buttons.back()->setBoxHover(true);
-            m_buttons.back()->setTexture("Textures/GridSmall.png");
-            m_bigGrid.getGrids()[count] = std::make_unique<SmallGrid>(m_buttons.back().get());
+            m_buttons.back()->setTexture("Textures/EmptyBig.png");
 
             m_buttons.back()->setFunction([this, count] {
-                static_cast<SmallGridScene*>(m_game->getScene(Game::SceneID::SmallGrid))->setActiveGrid(m_bigGrid.getGrids()[count].get());
-                m_game->pushScene(m_game->getScene(Game::SceneID::SmallGrid));
+                m_currentGrid->setMark(count, SmallGrid::Circle);
+                m_currentGrid->refresh();
+                refresh();
             });
 
-            // create x/o objects
-            int innerCount{ 0 };
-
-            for (int cellI{ 0 }; cellI < 3; ++cellI) {
-                for (int cellJ{ 0 }; cellJ < 3; ++cellJ) {
-
-                    m_buttons.push_back(std::make_unique<Button>(
-                        sf::Vector2f{
-                            subGridX + firstCellOffset + (cellStep * cellJ),
-                            subGridY + firstCellOffset + (cellStep * cellI)
-                        },
-                        cellSize, cellSize
-                    ));
-                    m_buttons.back()->setColors(sf::Color::Transparent);
-                    m_buttons.back()->setOutlineTrans();
-                    m_buttons.back()->setStationary(true);
-                    m_buttons.back()->setInteractable(false);
-                    m_buttons.back()->setUntouchable(true);
-
-                    m_bigGrid.getGrids()[count]->getMarks()[innerCount] = m_buttons.back().get();
-                    ++innerCount;
-
-
-                }
-            }
+            m_marks[count] = m_buttons.back().get();
             ++count;
 
         }
     }
 }
 
-void PlayScene::handleKeyPress(std::optional<sf::Event> event) {
+void SmallGridScene::handleKeyPress(std::optional<sf::Event> event) {
     if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
         if (keyPressed->scancode == sf::Keyboard::Scan::Escape) {
             m_game->popScene();
         }
     }
+}
+
+void SmallGridScene::refresh() {
+    for (int i{ 0 }; i < 9; ++i) {
+        switch (m_currentGrid->getMarkStates()[i]) {
+        case SmallGrid::Circle:
+            m_marks[i]->setTexture("Textures/CircleBig.png");
+            break;
+        case SmallGrid::Cross:
+            m_marks[i]->setTexture("Textures/CrossBig.png");
+            break;
+        case SmallGrid::Empty:
+            m_marks[i]->setTexture("Textures/EmptyBig.png");
+        }
+    }
+}
+
+void SmallGridScene::setActiveGrid(SmallGrid* grid) {
+    m_currentGrid = grid;
+    refresh();
 }

@@ -6,7 +6,8 @@ Game::Game()
     m_mainScene(this),
     m_menuScene(this),
     m_startMenu(this),
-    m_playScene(this) {
+    m_playScene(this),
+    m_smallGridScene(this) {
     m_view = sf::View(sf::FloatRect({ 0,0 }, { 1280, 800 }));
     m_window.setView(m_view);
     m_window.setKeyRepeatEnabled(false);
@@ -41,6 +42,7 @@ Scene* Game::getScene(SceneID id) {
     case SceneID::Menu: return &m_menuScene;
     case SceneID::Start: return &m_startMenu;
     case SceneID::Play: return &m_playScene;
+    case SceneID::SmallGrid: return &m_smallGridScene;
     default: return nullptr;
     }
 }
